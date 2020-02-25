@@ -86,7 +86,7 @@ class GuildStore extends DataStore {
               resolve(this.client.guilds.add(data));
             }, 10000);
             return undefined;
-          }, reject)
+          }, reject),
       );
     }
 

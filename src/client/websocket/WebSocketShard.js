@@ -535,7 +535,7 @@ class WebSocketShard extends EventEmitter {
         `[${tag}] Didn't receive a heartbeat ack last time, assuming zombie connection. Destroying and reconnecting.
     Status          : ${STATUS_KEYS[this.status]}
     Sequence        : ${this.sequence}
-    Connection State: ${this.connection ? CONNECTION_STATE[this.connection.readyState] : 'No Connection??'}`
+    Connection State: ${this.connection ? CONNECTION_STATE[this.connection.readyState] : 'No Connection??'}`,
       );
       this.destroy(4009);
       return;
