@@ -1,9 +1,7 @@
 'use strict';
 
-const { Events } = require('../../../util/Constants');
-
-module.exports = (client, { d: data }) => {
-  const channel = client.channels.get(data.channel_id);
+module.exports = function(data) {
+  const channel = this.client.channels.get(data.channel_id);
   const time = new Date(data.last_pin_timestamp);
 
   if (channel && time) {
@@ -17,6 +15,7 @@ module.exports = (client, { d: data }) => {
      * @param {DMChannel|TextChannel} channel The channel that the pins update occurred in
      * @param {Date} time The time of the pins update
      */
-    client.emit(Events.CHANNEL_PINS_UPDATE, channel, time);
+    this.emit(channel, time);
   }
+  return null;
 };

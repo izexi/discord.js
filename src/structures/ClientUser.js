@@ -2,6 +2,7 @@
 
 const Structures = require('../util/Structures');
 const DataResolver = require('../util/DataResolver');
+const { WSEvents } = require('../util/Constants');
 
 /**
  * Represents the logged in client's Discord user.
@@ -44,9 +45,7 @@ class ClientUser extends Structures.get('User') {
     return this.client.api.users('@me').patch({ data })
       .then(newData => {
         this.client.token = newData.token;
-        const { updated } = this.client.actions.UserUpdate.handle(newData);
-        if (updated) return updated;
-        return this;
+        return this.client.handler.handle(WSEvents.USER_UPDATE, newData) || this;
       });
   }
 

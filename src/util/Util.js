@@ -578,7 +578,6 @@ class Util {
    * @param {string[]} ignored The properties to ignore
    * @private
    */
-  /* eslint-disable func-names */
   static mixin(store, ignored) {
     const Collection = require('./Collection');
     Object.getOwnPropertyNames(Collection.prototype)

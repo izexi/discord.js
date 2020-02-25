@@ -42,12 +42,12 @@ class MessageCollector extends Collector {
     if (this.client.getMaxListeners() !== 0) this.client.setMaxListeners(this.client.getMaxListeners() + 1);
     this.client.on(Events.MESSAGE_CREATE, this.handleCollect);
     this.client.on(Events.MESSAGE_DELETE, this.handleDispose);
-    this.client.on(Events.MESSAGE_BULK_DELETE, bulkDeleteListener);
+    this.client.on(Events.MESSAGE_DELETE_BULK, bulkDeleteListener);
 
     this.once('end', () => {
       this.client.removeListener(Events.MESSAGE_CREATE, this.handleCollect);
       this.client.removeListener(Events.MESSAGE_DELETE, this.handleDispose);
-      this.client.removeListener(Events.MESSAGE_BULK_DELETE, bulkDeleteListener);
+      this.client.removeListener(Events.MESSAGE_DELETE_BULK, bulkDeleteListener);
       if (this.client.getMaxListeners() !== 0) this.client.setMaxListeners(this.client.getMaxListeners() - 1);
     });
   }

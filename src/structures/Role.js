@@ -5,6 +5,7 @@ const Permissions = require('../util/Permissions');
 const Util = require('../util/Util');
 const Base = require('./Base');
 const { Error, TypeError } = require('../errors');
+const { WSEvents } = require('../util/Constants');
 
 /**
  * Represents a role on Discord.
@@ -183,7 +184,7 @@ class Role extends Base {
       await Util.setPosition(this, data.position, false, this.guild._sortedRoles(),
         this.client.api.guilds(this.guild.id).roles, reason)
         .then(updatedRoles => {
-          this.client.actions.GuildRolesPositionUpdate.handle({
+          this.client.handler.handle(WSEvents.GUILD_ROLE_UPDATE, {
             guild_id: this.guild.id,
             roles: updatedRoles,
           });
@@ -315,7 +316,7 @@ class Role extends Base {
     return Util.setPosition(this, position, relative,
       this.guild._sortedRoles(), this.client.api.guilds(this.guild.id).roles, reason)
       .then(updatedRoles => {
-        this.client.actions.GuildRolesPositionUpdate.handle({
+        this.client.handler.handle(WSEvents.GUILD_ROLE_UPDATE, {
           guild_id: this.guild.id,
           roles: updatedRoles,
         });
@@ -335,10 +336,11 @@ class Role extends Base {
    */
   delete(reason) {
     return this.client.api.guilds[this.guild.id].roles[this.id].delete({ reason })
-      .then(() => {
-        this.client.actions.GuildRoleDelete.handle({ guild_id: this.guild.id, role_id: this.id });
-        return this;
-      });
+      .then(() =>
+        this.client.handler.handle(WSEvents.GUILD_ROLE_DELETE, {
+          guild_id: this.guild.id,
+          role_id: this.id,
+        }));
   }
 
   /**

@@ -1,8 +1,6 @@
 'use strict';
 
-const { Events } = require('../../../util/Constants');
-
-module.exports = (client, packet, shard) => {
+module.exports = function(_, shard) {
   const replayed = shard.sequence - shard.closeSequence;
   /**
    * Emitted when a shard resumes successfully.
@@ -10,5 +8,5 @@ module.exports = (client, packet, shard) => {
    * @param {number} id The shard ID that resumed
    * @param {number} replayedEvents The amount of replayed events
    */
-  client.emit(Events.SHARD_RESUME, shard.id, replayed);
+  this.emit(shard.id, replayed);
 };

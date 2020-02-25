@@ -6,7 +6,6 @@ const Collection = require('../../util/Collection');
 const Util = require('../../util/Util');
 const WebSocketShard = require('./WebSocketShard');
 const { Events, ShardEvents, Status, WSCodes, WSEvents } = require('../../util/Constants');
-const PacketHandlers = require('./handlers');
 
 const BeforeReadyWhitelist = [
   WSEvents.READY,
@@ -389,8 +388,8 @@ class WebSocketManager extends EventEmitter {
       });
     }
 
-    if (packet && !this.client.options.disabledEvents.includes(packet.t) && PacketHandlers[packet.t]) {
-      PacketHandlers[packet.t](this.client, packet, shard);
+    if (packet && !this.client.options.disabledEvents.includes(packet.t)) {
+      this.client.handler.handle(packet.t, packet.d, shard, true);
     }
 
     return true;

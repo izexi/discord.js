@@ -56,14 +56,16 @@ class GuildEmojiStore extends DataStore {
       }
 
       return this.client.api.guilds(this.guild.id).emojis.post({ data, reason })
-        .then(emoji => this.client.actions.GuildEmojiCreate.handle(this.guild, emoji).emoji);
+        .then(emoji => this.client.handler.handle('GUILD_EMOJI_CREATE', {
+          emoji,
+          guild: this.guild,
+        }));
     }
 
     return DataResolver.resolveImage(attachment).then(image => this.create(image, name, { roles, reason }));
   }
 
   /**
-   * Data that can be resolved into an GuildEmoji object. This can be:
    * * A custom emoji ID
    * * A GuildEmoji object
    * * A ReactionEmoji object

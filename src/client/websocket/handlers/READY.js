@@ -2,7 +2,8 @@
 
 let ClientUser;
 
-module.exports = (client, { d: data }, shard) => {
+module.exports = function(data, shard) {
+  const { client } = this;
   if (client.user) {
     client.user._patch(data.user);
   } else {

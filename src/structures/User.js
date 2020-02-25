@@ -5,6 +5,7 @@ const { Presence } = require('./Presence');
 const Snowflake = require('../util/Snowflake');
 const Base = require('./Base');
 const { Error } = require('../errors');
+const { WSEvents } = require('../util/Constants');
 
 /**
  * Represents a user on Discord.
@@ -222,7 +223,7 @@ class User extends Base {
     const data = await this.client.api.users(this.client.user.id).channels.post({ data: {
       recipient_id: this.id,
     } });
-    return this.client.actions.ChannelCreate.handle(data).channel;
+    return this.client.handler.handle(WSEvents.CHANNEL_CREATE, data);
   }
 
   /**
@@ -233,7 +234,7 @@ class User extends Base {
     const { dmChannel } = this;
     if (!dmChannel) throw new Error('USER_NO_DMCHANNEL');
     const data = await this.client.api.channels(dmChannel.id).delete();
-    return this.client.actions.ChannelDelete.handle(data).channel;
+    return this.client.handler.handle(WSEvents.CHANNEL_DELETE, data);
   }
 
   /**

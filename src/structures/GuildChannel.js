@@ -8,6 +8,7 @@ const Util = require('../util/Util');
 const Permissions = require('../util/Permissions');
 const Collection = require('../util/Collection');
 const { Error, TypeError } = require('../errors');
+const { WSEvents } = require('../util/Constants');
 
 /**
  * Represents a guild channel from any of the following:
@@ -315,7 +316,7 @@ class GuildChannel extends Channel {
       await Util.setPosition(this, data.position, false,
         this.guild._sortedChannels(this), this.client.api.guilds(this.guild.id).channels, reason)
         .then(updatedChannels => {
-          this.client.actions.GuildChannelsPositionUpdate.handle({
+          this.client.handler.handle(WSEvents.CHANNEL_UPDATE, {
             guild_id: this.guild.id,
             channels: updatedChannels,
           });
@@ -340,9 +341,7 @@ class GuildChannel extends Channel {
       reason,
     });
 
-    const clone = this._clone();
-    clone._patch(newData);
-    return clone;
+    return this.client.handler.handle(WSEvents.CHANNEL_UPDATE, newData);
   }
 
   /**
@@ -412,7 +411,7 @@ class GuildChannel extends Channel {
     return Util.setPosition(this, position, relative,
       this.guild._sortedChannels(this), this.client.api.guilds(this.guild.id).channels, reason)
       .then(updatedChannels => {
-        this.client.actions.GuildChannelsPositionUpdate.handle({
+        this.client.handler.handle(WSEvents.CHANNEL_UPDATE, {
           guild_id: this.guild.id,
           channels: updatedChannels,
         });
@@ -560,7 +559,8 @@ class GuildChannel extends Channel {
    *   .catch(console.error);
    */
   delete(reason) {
-    return this.client.api.channels(this.id).delete({ reason }).then(() => this);
+    return this.client.api.channels(this.id).delete({ reason })
+      .then(data => this.client.handler.handle(WSEvents.CHANNEL_DELETE, data));
   }
 }
 

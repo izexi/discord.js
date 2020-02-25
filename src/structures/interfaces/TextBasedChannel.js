@@ -5,6 +5,7 @@ const Snowflake = require('../../util/Snowflake');
 const Collection = require('../../util/Collection');
 const { RangeError, TypeError } = require('../../errors');
 const APIMessage = require('../APIMessage');
+const { WSEvents } = require('../../util/Constants');
 
 /**
  * Interface for classes that have text-channel-like features.
@@ -145,7 +146,7 @@ class TextBasedChannel {
 
     const { data, files } = await apiMessage.resolveFiles();
     return this.client.api.channels[this.id].messages.post({ data, files })
-      .then(d => this.client.actions.MessageCreate.handle(d).message);
+      .then(d => this.client.handler.handle(WSEvents.MESSAGE_CREATE, d));
   }
 
   /**
@@ -306,19 +307,19 @@ class TextBasedChannel {
       if (messageIDs.length === 0) return new Collection();
       if (messageIDs.length === 1) {
         await this.client.api.channels(this.id).messages(messageIDs[0]).delete();
-        const message = this.client.actions.MessageDelete.handle({
+        const message = this.client.handler.handle(WSEvents.MESSAGE_DELETE, {
           channel_id: this.id,
           id: messageIDs[0],
-        }).message;
+        });
         if (message) return new Collection([[message.id, message]]);
         return new Collection();
       }
       await this.client.api.channels[this.id].messages['bulk-delete']
         .post({ data: { messages: messageIDs } });
-      return this.client.actions.MessageDeleteBulk.handle({
+      return this.client.handler.handle(WSEvents.MESSAGE_DELETE_BULK, {
         channel_id: this.id,
         ids: messageIDs,
-      }).messages;
+      });
     }
     if (!isNaN(messages)) {
       const msgs = await this.messages.fetch({ limit: messages });

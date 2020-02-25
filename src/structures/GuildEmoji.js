@@ -123,11 +123,10 @@ class GuildEmoji extends Emoji {
         name: data.name,
         roles,
       }, reason })
-      .then(newData => {
-        const clone = this._clone();
-        clone._patch(newData);
-        return clone;
-      });
+      .then(emoji => this.client.handler.handle('GUILD_EMOJI_UPDATE', {
+        emoji,
+        cachedEmoji: this,
+      }));
   }
 
   /**
@@ -147,7 +146,7 @@ class GuildEmoji extends Emoji {
    */
   delete(reason) {
     return this.client.api.guilds(this.guild.id).emojis(this.id).delete({ reason })
-      .then(() => this);
+      .then(() => this.client.handler.handle('GUILD_EMOJI_DELETE', { emoji: this, guild: this.guild }));
   }
 
   /**

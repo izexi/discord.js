@@ -5,7 +5,7 @@ const Integration = require('./Integration');
 const GuildAuditLogs = require('./GuildAuditLogs');
 const Webhook = require('./Webhook');
 const VoiceRegion = require('./VoiceRegion');
-const { ChannelTypes, DefaultMessageNotifications, PartialTypes } = require('../util/Constants');
+const { ChannelTypes, DefaultMessageNotifications, PartialTypes, WSEvents } = require('../util/Constants');
 const Collection = require('../util/Collection');
 const Util = require('../util/Util');
 const DataResolver = require('../util/DataResolver');
@@ -277,12 +277,6 @@ class Guild extends Base {
       data.default_message_notifications;
 
     /**
-     * The value set for the guild's system channel flags
-     * @type {Readonly<SystemChannelFlags>}
-     */
-    this.systemChannelFlags = new SystemChannelFlags(data.system_channel_flags).freeze();
-
-    /**
      * The maximum amount of members the guild can have
      * <info>You will need to fetch the guild using {@link Guild#fetch} if you want to receive this parameter</info>
      * @type {?number}
@@ -366,7 +360,7 @@ class Guild extends Base {
       this.emojis = new GuildEmojiStore(this);
       if (data.emojis) for (const emoji of data.emojis) this.emojis.add(emoji);
     } else if (data.emojis) {
-      this.client.actions.GuildEmojisUpdate.handle({
+      this.client.handler.handle(WSEvents.GUILD_EMOJIS_UPDATE, {
         guild_id: this.id,
         emojis: data.emojis,
       });
@@ -825,7 +819,7 @@ class Guild extends Base {
       _data.systemChannelFlags = SystemChannelFlags.resolve(data.systemChannelFlags);
     }
     return this.client.api.guilds(this.id).patch({ data: _data, reason })
-      .then(newData => this.client.actions.GuildUpdate.handle(newData).updated);
+      .then(newData => this.client.handler.handle(WSEvents.GUILD_UPDATE, newData));
   }
 
   /**
@@ -1032,10 +1026,10 @@ class Guild extends Base {
     }));
 
     return this.client.api.guilds(this.id).channels.patch({ data: updatedChannels }).then(() =>
-      this.client.actions.GuildChannelsPositionUpdate.handle({
+      this.client.handler.handle(WSEvents.CHANNEL_UPDATE, {
         guild_id: this.id,
         channels: updatedChannels,
-      }).guild
+      })
     );
   }
 
@@ -1066,10 +1060,10 @@ class Guild extends Base {
     return this.client.api.guilds(this.id).roles.patch({
       data: rolePositions,
     }).then(() =>
-      this.client.actions.GuildRolePositionUpdate.handle({
+      this.client.handler.handle(WSEvents.GUILD_ROLE_UPDATE, {
         guild_id: this.id,
         roles: rolePositions,
-      }).guild
+      })
     );
   }
 
@@ -1101,7 +1095,7 @@ class Guild extends Base {
   leave() {
     if (this.ownerID === this.client.user.id) return Promise.reject(new Error('GUILD_OWNED'));
     return this.client.api.users('@me').guilds(this.id).delete()
-      .then(() => this.client.actions.GuildDelete.handle({ id: this.id }).guild);
+      .then(() => this.client.handler.handle(WSEvents.GUILD_DELETE, this));
   }
 
   /**
@@ -1115,7 +1109,7 @@ class Guild extends Base {
    */
   delete() {
     return this.client.api.guilds(this.id).delete()
-      .then(() => this.client.actions.GuildDelete.handle({ id: this.id }).guild);
+      .then(() => this.client.handler.handle(WSEvents.GUILD_DELETE, this));
   }
 
   /**

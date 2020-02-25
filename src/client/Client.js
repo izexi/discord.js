@@ -4,7 +4,7 @@ const BaseClient = require('./BaseClient');
 const Permissions = require('../util/Permissions');
 const ClientVoiceManager = require('./voice/ClientVoiceManager');
 const WebSocketManager = require('./websocket/WebSocketManager');
-const ActionsManager = require('./actions/ActionsManager');
+const PacketHandler = require('./websocket/handlers');
 const Collection = require('../util/Collection');
 const VoiceRegion = require('../structures/VoiceRegion');
 const Webhook = require('../structures/Webhook');
@@ -77,11 +77,11 @@ class Client extends BaseClient {
     this.ws = new WebSocketManager(this);
 
     /**
-     * The action manager of the client
-     * @type {ActionsManager}
+     * The packet handler of the client
+     * @type {PacketHandler}
      * @private
      */
-    this.actions = new ActionsManager(this);
+    this.handler = new PacketHandler(this);
 
     /**
      * The voice manager of the client (`null` in browsers)

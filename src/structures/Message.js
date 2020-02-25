@@ -8,7 +8,7 @@ const ClientApplication = require('./ClientApplication');
 const Util = require('../util/Util');
 const Collection = require('../util/Collection');
 const ReactionStore = require('../stores/ReactionStore');
-const { MessageTypes } = require('../util/Constants');
+const { MessageTypes, WSEvents } = require('../util/Constants');
 const Permissions = require('../util/Permissions');
 const Base = require('./Base');
 const { Error, TypeError } = require('../errors');
@@ -462,12 +462,12 @@ class Message extends Base {
 
     return this.client.api.channels(this.channel.id).messages(this.id).reactions(emoji, '@me')
       .put()
-      .then(() => this.client.actions.MessageReactionAdd.handle({
+      .then(() => this.client.handler.handle(WSEvents.MESSAGE_REACTION_ADD, {
         user: this.client.user,
         channel: this.channel,
         message: this,
         emoji: Util.parseEmoji(emoji),
-      }).reaction);
+      }));
   }
 
   /**

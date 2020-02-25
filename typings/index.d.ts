@@ -447,7 +447,7 @@ declare module 'discord.js' {
 			MESSAGE_CREATE: 'message';
 			MESSAGE_DELETE: 'messageDelete';
 			MESSAGE_UPDATE: 'messageUpdate';
-			MESSAGE_BULK_DELETE: 'messageDeleteBulk';
+			MESSAGE_DELETE_BULK: 'messageDeleteBulk';
 			MESSAGE_REACTION_ADD: 'messageReactionAdd';
 			MESSAGE_REACTION_REMOVE: 'messageReactionRemove';
 			MESSAGE_REACTION_REMOVE_ALL: 'messageReactionRemoveAll';
@@ -2238,7 +2238,7 @@ declare module 'discord.js' {
 		EMOJI_UPDATE?: number;
 		EMOJI_DELETE?: number;
 		MESSAGE_DELETE?: number;
-		MESSAGE_BULK_DELETE?: number;
+		MESSAGE_DELETE_BULK?: number;
 		MESSAGE_PIN?: number;
 		MESSAGE_UNPIN?: number;
 		INTEGRATION_CREATE?: number;

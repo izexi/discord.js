@@ -1,10 +1,8 @@
 'use strict';
 
-const { Events } = require('../../../util/Constants');
-
-module.exports = (client, { d: data }) => {
-  const channel = client.channels.get(data.channel_id);
-  const user = client.users.get(data.user_id);
+module.exports = function(data) {
+  const channel = this.client.channels.get(data.channel_id);
+  const user = this.client.users.get(data.user_id);
 
   if (channel && user) {
   /**
@@ -13,6 +11,6 @@ module.exports = (client, { d: data }) => {
    * @param {Channel} channel The channel the user started typing in
    * @param {User} user The user that started typing
    */
-    client.emit(Events.TYPING_START, channel, user);
+    this.emit(channel, user);
   }
 };

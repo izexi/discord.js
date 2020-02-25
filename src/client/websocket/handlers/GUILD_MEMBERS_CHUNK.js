@@ -1,10 +1,9 @@
 'use strict';
 
-const { Events } = require('../../../util/Constants');
 const Collection = require('../../../util/Collection');
 
-module.exports = (client, { d: data }) => {
-  const guild = client.guilds.get(data.guild_id);
+module.exports = function(data) {
+  const guild = this.guilds.get(data.guild_id);
   if (!guild) return;
   const members = new Collection();
 
@@ -15,5 +14,5 @@ module.exports = (client, { d: data }) => {
    * @param {Collection<Snowflake, GuildMember>} members The members in the chunk
    * @param {Guild} guild The guild related to the member chunk
    */
-  client.emit(Events.GUILD_MEMBERS_CHUNK, members, guild);
+  this.emit(members, guild);
 };

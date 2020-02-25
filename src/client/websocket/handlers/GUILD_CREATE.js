@@ -2,7 +2,8 @@
 
 const { Events, Status } = require('../../../util/Constants');
 
-module.exports = async (client, { d: data }, shard) => {
+module.exports = async function(data, shard) {
+  const { client } = this;
   let guild = client.guilds.get(data.id);
   if (guild) {
     if (!guild.available && !data.unavailable) {
@@ -30,7 +31,8 @@ module.exports = async (client, { d: data }, shard) => {
           client.emit(Events.DEBUG, `Failed to fetch all members: ${err}\n${err.stack}`)
         );
       }
-      client.emit(Events.GUILD_CREATE, guild);
+      this.emit(guild);
     }
   }
+  return null;
 };

@@ -1,6 +1,6 @@
 'use strict';
 
-const { ChannelTypes } = require('../util/Constants');
+const { WSEvents, ChannelTypes } = require('../util/Constants');
 const DataStore = require('./DataStore');
 const GuildChannel = require('../structures/GuildChannel');
 const PermissionOverwrites = require('../structures/PermissionOverwrites');
@@ -113,7 +113,7 @@ class GuildChannelStore extends DataStore {
       },
       reason,
     });
-    return this.client.actions.ChannelCreate.handle(data).channel;
+    return this.client.handler.handle(WSEvents.CHANNEL_CREATE, data);
   }
 }
 
