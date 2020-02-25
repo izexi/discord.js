@@ -97,7 +97,6 @@
     "computed-property-spacing": "error",
     "consistent-this": ["error", "$this"],
     "eol-last": "error",
-    "func-names": "error",
     "func-name-matching": "error",
     "func-style": ["error", "declaration", { "allowArrowFunctions": true }],
     "indent": ["error", 2, { "SwitchCase": 1 }],
