@@ -142,6 +142,18 @@ class GuildTemplate extends Base {
   }
 
   /**
+   * Creates a guild from this template.
+   * <warn>This is only available to bots in fewer than 10 guilds.</warn>
+   * @returns {Promise<Guild>}
+   */
+  createGuild() {
+    return this.api.guilds
+      .templates(this.code)
+      .post()
+      .then(data => this.client.guilds.add(data, false));
+  }
+
+  /**
    * When concatenated with a string, this automatically returns the templates's code instead of the template object.
    * @returns {string}
    * @example
