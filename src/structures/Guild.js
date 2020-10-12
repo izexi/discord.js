@@ -726,6 +726,25 @@ class Guild extends Base {
   }
 
   /**
+   * Fetches a collection of templates from this guild.
+   * Resolves with a collection mapping templates by their codes.
+   * @returns {Promise<Collection<string, GuildTemplate>>}
+   * @example
+   * // Fetch templates
+   * guild.fetchTemplates()
+   *   .then(templates => console.log(`Fetched ${templates.size} templates`))
+   *   .catch(console.error);
+   */
+  fetchTemplates() {
+    return this.client.api
+      .guilds(this.id)
+      .templates.get()
+      .then(templates =>
+        templates.reduce((col, data) => col.set(data.code, new GuildTemplate(this.client, data)), new Collection()),
+      );
+  }
+
+  /**
    * The data for creating an integration.
    * @typedef {Object} IntegrationData
    * @property {string} id The integration id
