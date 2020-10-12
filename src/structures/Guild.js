@@ -4,6 +4,7 @@ const { deprecate } = require('util');
 const Base = require('./Base');
 const GuildAuditLogs = require('./GuildAuditLogs');
 const GuildPreview = require('./GuildPreview');
+const GuildTemplate = require('./GuildTemplate');
 const Integration = require('./Integration');
 const Invite = require('./Invite');
 const VoiceRegion = require('./VoiceRegion');
@@ -742,6 +743,19 @@ class Guild extends Base {
       .guilds(this.id)
       .integrations.post({ data, reason })
       .then(() => this);
+  }
+
+  /**
+   * Creates a template for the guild.
+   * @param {string} name The name for the template
+   * @param {string} [description] The description for the template
+   * @returns {Promise<GuildTemplate>}
+   */
+  createTemplate(name, description) {
+    return this.client.api
+      .guilds(this.id)
+      .templates.post({ name, description })
+      .then(data => new GuildTemplate(this.client, data));
   }
 
   /**
