@@ -643,6 +643,7 @@ declare module 'discord.js' {
     public verificationLevel: VerificationLevel;
     public readonly verified: boolean;
     public readonly voiceStates: VoiceStateManager;
+    public welcomeScreen: WelcomeScreen | null;
     public readonly widgetChannel: TextChannel | null;
     public widgetChannelID: Snowflake | null;
     public widgetEnabled: boolean | null;
@@ -665,6 +666,7 @@ declare module 'discord.js' {
     public fetchVanityData(): Promise<Vanity>;
     public fetchVoiceRegions(): Promise<Collection<string, VoiceRegion>>;
     public fetchWebhooks(): Promise<Collection<Snowflake, Webhook>>;
+    public fetchWelcomeScreen(): Promise<WelcomeScreen>;
     public fetchWidget(): Promise<GuildWidget>;
     public iconURL(options?: ImageURLOptions & { dynamic?: boolean }): string | null;
     public leave(): Promise<Guild>;
@@ -1878,6 +1880,20 @@ declare module 'discord.js' {
     public once(event: 'close', listener: (event: CloseEvent) => void): this;
     public once(event: 'allReady', listener: (unavailableGuilds?: Set<Snowflake>) => void): this;
     public once(event: string, listener: (...args: any[]) => void): this;
+  }
+
+  export class WelcomeChannel extends Base {
+    public channelID: Snowflake;
+    public guild: Guild;
+    public description: string;
+    public readonly channel: TextChannel | NewsChannel | null;
+    public readonly emoji: GuildEmoji | Emoji;
+  }
+
+  export class WelcomeScreen extends Base {
+    public guild: Guild;
+    public description: string | null;
+    public welcomeChannels: Collection<Snowflake, WelcomeChannel>;
   }
 
   //#endregion
