@@ -79,6 +79,10 @@ class Guild extends Base {
      */
     this.deleted = false;
 
+    /**
+     * The welcome screen for this guild
+     * @type {?WelcomeScreen}
+     */
     this.welcomeScreen = null;
 
     if (!data) return;
