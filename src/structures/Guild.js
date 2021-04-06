@@ -79,6 +79,8 @@ class Guild extends Base {
      */
     this.deleted = false;
 
+    this.welcomeScreen = null;
+
     if (!data) return;
     if (data.unavailable) {
       /**
@@ -327,6 +329,10 @@ class Guild extends Base {
       this.approximatePresenceCount = data.approximate_presence_count;
     } else if (typeof this.approximatePresenceCount === 'undefined') {
       this.approximatePresenceCount = null;
+    }
+
+    if (typeof data.welcome_screen !== 'undefined') {
+      this.welcomeScreen = new WelcomeScreen(guild, data.welcome_screen)
     }
 
     /**
@@ -693,7 +699,7 @@ class Guild extends Base {
     return this.client.api
       .guilds(this.id)
       ['welcome-screen'].get()
-      .then(data => new WelcomeScreen(this.client, this, data));
+      .then(data => new WelcomeScreen(this, data));
   }
 
   /**
