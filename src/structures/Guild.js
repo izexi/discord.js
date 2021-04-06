@@ -8,6 +8,7 @@ const Integration = require('./Integration');
 const Invite = require('./Invite');
 const VoiceRegion = require('./VoiceRegion');
 const Webhook = require('./Webhook');
+const WelcomeScreen = require('./WelcomeScreen');
 const { Error, TypeError } = require('../errors');
 const GuildChannelManager = require('../managers/GuildChannelManager');
 const GuildEmojiManager = require('../managers/GuildEmojiManager');
@@ -686,6 +687,13 @@ class Guild extends Base {
       .then(templates =>
         templates.reduce((col, data) => col.set(data.code, new GuildTemplate(this.client, data)), new Collection()),
       );
+  }
+
+  fetchWelcomeScreen() {
+    return this.client.api
+      .guilds(this.id)
+      ['welcome-screen'].get()
+      .then(data => new WelcomeScreen(this.client, this, data));
   }
 
   /**
