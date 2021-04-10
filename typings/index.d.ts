@@ -654,6 +654,7 @@ declare module 'discord.js' {
     public delete(): Promise<Guild>;
     public discoverySplashURL(options?: ImageURLOptions): string | null;
     public edit(data: GuildEditData, reason?: string): Promise<Guild>;
+    public editWelcomeScreen(data?: WelcomeChannelData): Promise<WelcomeScreen>;
     public equals(guild: Guild): boolean;
     public fetch(): Promise<Guild>;
     public fetchAuditLogs(options?: GuildAuditLogsFetchOptions): Promise<GuildAuditLogs>;
@@ -3426,6 +3427,18 @@ declare module 'discord.js' {
     $os?: string;
     $browser?: string;
     $device?: string;
+  }
+
+  interface WelcomeChannelData {
+    description: string;
+    channel: GuildChannelResolvable;
+    emoji?: EmojiIdentifierResolvable;
+  }
+
+  interface WelcomeScreenEditData {
+    enabled?: boolean;
+    description?: string;
+    welcomeChannels?: WelcomeChannelData[];
   }
 
   type WSEventType =
