@@ -1936,7 +1936,7 @@ declare module 'discord.js' {
     public valueOf(): Collection<K, Holds>;
   }
 
-  export class BaseGuildEmojiManager extends BaseManager<Snowflake, GuildEmoji, EmojiResolvable> {
+  export class BaseGuildEmojiManager extends BaseManager<Snowflake, GuildEmoji, EmojiIdentifierResolvable> {
     constructor(client: Client, iterable?: Iterable<any>);
     public resolveIdentifier(emoji: EmojiIdentifierResolvable): string | null;
   }
